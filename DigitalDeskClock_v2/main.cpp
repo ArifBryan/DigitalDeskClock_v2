@@ -8,6 +8,7 @@
 #include "SystemConfig.h"
 #include "DS3231.h"
 #include "MAX7219.h"
+#include <stdio.h>
 
 DS3231 rtc(&i2c);
 MAX7219 disp(&spi, 4, &PORTB, 2);
@@ -19,26 +20,30 @@ struct Time{
 };
 
 uint32_t timer;
-uint8_t toggle;
+int16_t shift;
 Time tim;
 uint8_t dispBuffer[8 * 4];
+char strBuffer[20];
 
 int main(void){
 	System.Init();
 	disp.Init();
 	disp.SetBuffer(dispBuffer);
+	//rtc.SetTime(0, 56, 10);
 	
     while(1){
 		Time timeNow;
 		rtc.GetTime(&timeNow.Seconds, &timeNow.Minutes, &timeNow.Hours);
 		
-		if(System.Ticks() - timer >= 100){
-			disp.DrawPix(toggle ++, 0, 1);
+		if(System.Ticks() - timer >= 50){
+			sprintf(strBuffer, "  %2d%c%02d  ", timeNow.Hours, (timeNow.Seconds % 2 ? ':' : ' '), timeNow.Minutes);
+			disp.Cursor(shift++, 0);
+			disp.Print(strBuffer);
+			disp.DrawBuffer(0);
+			if(shift >= 32){shift = -20;}
 			
 			timer = System.Ticks();
 		}
-		
-		disp.DrawBuffer();
     }
 }
 
