@@ -7,10 +7,10 @@
 
 #include "SystemConfig.h"
 #include "DS3231.h"
-#include "MAX7219_7Seg.h"
+#include "MAX7219.h"
 
 DS3231 rtc(&i2c);
-MAX7219_7Seg disp(&spi, 4, &PORTB, 2);
+MAX7219 disp(&spi, 4, &PORTB, 2);
 
 struct Time{
 	uint8_t Seconds;
@@ -21,20 +21,24 @@ struct Time{
 uint32_t timer;
 uint8_t toggle;
 Time tim;
+uint8_t dispBuffer[8 * 4];
 
 int main(void){
 	System.Init();
 	disp.Init();
+	disp.SetBuffer(dispBuffer);
 	
     while(1){
 		Time timeNow;
 		rtc.GetTime(&timeNow.Seconds, &timeNow.Minutes, &timeNow.Hours);
-		if(timeNow.Seconds != tim.Seconds){
-			disp.Write(5, 1, 0xFF * toggle);
-			toggle = !toggle;
+		
+		if(System.Ticks() - timer >= 100){
+			disp.DrawPix(toggle ++, 0, 1);
 			
-			tim.Seconds = timeNow.Seconds;
+			timer = System.Ticks();
 		}
+		
+		disp.DrawBuffer();
     }
 }
 
