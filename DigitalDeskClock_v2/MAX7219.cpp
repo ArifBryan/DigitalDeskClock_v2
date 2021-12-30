@@ -38,13 +38,16 @@ void MAX7219::Print(char c){
 	for(uint8_t i = 0; i < lx; i ++){
 		if(i + (int16_t)cx >= chipCnt * 8){break;}
 		if(i + (int16_t)cx >= 0){
-			for(uint8_t j = 0; j < 7; j ++){
-				DrawPix(i + cx, (7 - j) + cy, (pgm_read_byte(&_font1_ascii1[chr][i]) >> j) & 1);
+			for(uint8_t j = 0; j < 8; j ++){
+				if((7 - j) + (int8_t)cy < 8 && (7 - j) + (int8_t)cy >= 0){
+					DrawPix(i + cx, (7 - j) + cy, (pgm_read_byte(&_font1_ascii1[chr][i]) >> j) & 1);
+				}
 			}
 		}
 	}
 	if(lx + cx < chipCnt * 8){
 		for(uint8_t j = 0; j < 8; j ++){
+			if((7 - j) + (int8_t)cy >= 8 && (7 - j) + (int8_t)cy < 0){break;}
 			DrawPix(lx + cx , j + cy, 0);
 		}
 	}

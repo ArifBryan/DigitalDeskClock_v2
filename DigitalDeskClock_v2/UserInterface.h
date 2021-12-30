@@ -12,6 +12,8 @@
 struct UserInterface_TypeDef{
 	void Init();
 	void Handler();
+private:
+	void DisplayTime(uint8_t x, uint8_t y);
 };
 
 extern UserInterface_TypeDef UserInterface;

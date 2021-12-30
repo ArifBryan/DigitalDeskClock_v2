@@ -14,6 +14,7 @@ Input_TypeDef Input;
 ADC_TypeDef adc;
 
 uint32_t sampleTimer;
+uint32_t buttonTimer;
 uint16_t alsRawFiltered = 1023;
 
 void Input_TypeDef::Init(){
@@ -22,7 +23,7 @@ void Input_TypeDef::Init(){
 
 void Input_TypeDef::Handler(){
 	btn1 = 0;
-	if(!((PIND >> PIND5) & 1) && lbtn1){
+	if(!((PIND >> PIND5) & 1) && lbtn1 && System.Ticks() - buttonTimer >= 50){
 		btn1 = 1;
 		lbtn1 = 0;
 	}
@@ -31,7 +32,7 @@ void Input_TypeDef::Handler(){
 	}
 	
 	btn2 = 0;
-	if(!((PIND >> PIND3) & 1) && lbtn2){
+	if(!((PIND >> PIND3) & 1) && lbtn2 && System.Ticks() - buttonTimer >= 50){
 		btn2 = 1;
 		lbtn2 = 0;
 	}
@@ -40,12 +41,16 @@ void Input_TypeDef::Handler(){
 	}
 	
 	btn3 = 0;
-	if(!((PIND >> PIND2) & 1) && lbtn2){
+	if(!((PIND >> PIND2) & 1) && lbtn2 && System.Ticks() - buttonTimer >= 50){
 		btn3 = 1;
 		lbtn3 = 0;
 	}
 	else if(((PIND >> PIND2) & 1)){
 		lbtn3 = 1;
+	}
+	
+	if(((PIND >> PIND5) & 1) && ((PIND >> PIND3) & 1) && ((PIND >> PIND2) & 1)){
+		buttonTimer = System.Ticks();
 	}
 	
 	if(System.Ticks() - sampleTimer >= 500){
