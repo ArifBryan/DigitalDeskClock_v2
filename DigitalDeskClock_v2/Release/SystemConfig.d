@@ -1,4 +1,4 @@
-main.d main.o: .././main.cpp .././SystemConfig.h \
+SystemConfig.d SystemConfig.o: .././SystemConfig.cpp .././SystemConfig.h \
  d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -12,8 +12,9 @@ main.d main.o: .././main.cpp .././SystemConfig.h \
  d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\lock.h \
  .././I2CHandle.h .././I2CPeriph.h \
  d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\twi.h \
- .././SPIHandle.h .././SPIPeriph.h .././DS3231.h .././Inputs.h \
- .././UserInterface.h
+ .././SPIHandle.h .././SPIPeriph.h .././DS3231.h \
+ d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h \
+ d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\atomic.h
 
 .././SystemConfig.h:
 
@@ -51,6 +52,6 @@ d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 .././DS3231.h:
 
-.././Inputs.h:
+d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\interrupt.h:
 
-.././UserInterface.h:
+d:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\util\atomic.h:

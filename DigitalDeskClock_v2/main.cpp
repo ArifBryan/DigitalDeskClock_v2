@@ -6,44 +6,33 @@
  */ 
 
 #include "SystemConfig.h"
-#include "DS3231.h"
-#include "MAX7219.h"
-#include <stdio.h>
-
-DS3231 rtc(&i2c);
-MAX7219 disp(&spi, 4, &PORTB, 2);
-
-struct Time{
-	uint8_t Seconds;
-	uint8_t Minutes;
-	uint8_t Hours;
-};
-
-uint32_t timer;
-int16_t shift;
-Time tim;
-uint8_t dispBuffer[8 * 4];
-char strBuffer[20];
+#include "Inputs.h"
+#include "UserInterface.h"
 
 int main(void){
 	System.Init();
-	disp.Init();
-	disp.SetBuffer(dispBuffer);
-	//rtc.SetTime(0, 56, 10);
+	Input.Init();
+	UserInterface.Init();
 	
     while(1){
-		Time timeNow;
-		rtc.GetTime(&timeNow.Seconds, &timeNow.Minutes, &timeNow.Hours);
+		Input.Handler();
+		UserInterface.Handler();
 		
-		if(System.Ticks() - timer >= 50){
-			sprintf(strBuffer, "  %2d%c%02d  ", timeNow.Hours, (timeNow.Seconds % 2 ? ':' : ' '), timeNow.Minutes);
-			disp.Cursor(shift++, 0);
-			disp.Print(strBuffer);
-			disp.DrawBuffer(0);
-			if(shift >= 32){shift = -20;}
-			
-			timer = System.Ticks();
-		}
+// 		if(Input.Button1()){
+// 			//sprintf(strBuffer, "   %2d%c%02d  ", timeNow.Hours, (timeNow.Seconds % 2 ? ':' : ' '), timeNow.Minutes);
+// 			disp.Cursor(5, 0);
+// 			sprintf(strBuffer, "%2d", 12);
+// 			disp.Print(strBuffer);
+// 			disp.Cursor(15, 0);
+// 			disp.Print((timeNow.Seconds % 2 ? ':' : ' '));
+// 			disp.Cursor(17, 0);
+// 			sprintf(strBuffer, "%02d", 34);
+// 			disp.Print(strBuffer);
+// 			disp.DrawBuffer(0);
+// 			if(shift >= 32){shift = -20;}
+// 			
+// 			timer = System.Ticks();
+// 		}
     }
 }
 
