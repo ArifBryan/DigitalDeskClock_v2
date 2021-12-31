@@ -32,7 +32,7 @@ void MAX7219::Init() {
     Write(chipCnt + 1, MAX7219_REG_SHUTDOWN, 1);
 }
 
-void MAX7219::Print(char c){
+void MAX7219::Print(char c, uint8_t visible){
 	uint8_t chr = c - ' ';
 	uint8_t lx = pgm_read_byte(&_font1_ascii1[chr][5]);
 	for(uint8_t i = 0; i < lx; i ++){
@@ -40,7 +40,7 @@ void MAX7219::Print(char c){
 		if(i + (int16_t)cx >= 0){
 			for(uint8_t j = 0; j < 8; j ++){
 				if((7 - j) + (int8_t)cy < 8 && (7 - j) + (int8_t)cy >= 0){
-					DrawPix(i + cx, (7 - j) + cy, (pgm_read_byte(&_font1_ascii1[chr][i]) >> j) & 1);
+					DrawPix(i + cx, (7 - j) + cy, (pgm_read_byte(&_font1_ascii1[chr][i]) >> j) & visible);
 				}
 			}
 		}

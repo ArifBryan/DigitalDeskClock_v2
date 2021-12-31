@@ -37,10 +37,10 @@ public:
 	void DrawBuffer(uint8_t rotation);
 	void ClearBuffer(){memset(buffer, 0, chipCnt * 8);}
 	void Cursor(uint16_t x, uint8_t y){cx = x; cy = y;}
-	void Print(char c);
-	void Print(const char *str){
+	void Print(char c, uint8_t visible = 1);
+	void Print(const char *str, uint8_t visible = 1){
 		uint8_t i = 0;
-		while(str[i] != 0){Print(str[i++]);}
+		while(str[i] != 0){Print(str[i++], visible);}
 	}
 private:
     uint8_t chipCnt;

@@ -41,7 +41,7 @@ void Input_TypeDef::Handler(){
 	}
 	
 	btn3 = 0;
-	if(!((PIND >> PIND2) & 1) && lbtn2 && System.Ticks() - buttonTimer >= 50){
+	if(!((PIND >> PIND2) & 1) && lbtn3 && System.Ticks() - buttonTimer >= 50){
 		btn3 = 1;
 		lbtn3 = 0;
 	}

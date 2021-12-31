@@ -32,6 +32,10 @@ const char monthString[][4] = {
 	"Nov",
 	"Dec"
 };
+const char offOnString[][4] = {
+	"Off",
+	"On "
+};
 
 struct UserInterface_TypeDef{
 	void Init();
