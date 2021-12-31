@@ -32,6 +32,12 @@ struct Time{
 	uint8_t Minutes;
 	uint8_t Hours;
 };
+struct Dates{
+	uint8_t Day;
+	uint8_t Date;
+	uint8_t Month;
+	uint8_t Year;
+};
 
 extern I2CPeriph i2c;
 extern SPIPeriph spi;

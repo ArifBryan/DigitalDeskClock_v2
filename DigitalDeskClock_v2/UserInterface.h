@@ -9,11 +9,38 @@
 
 #include <inttypes.h>
 
+const char dayString[][4] = {
+	"Mon",
+	"Tue",
+	"Wed",
+	"Thu",
+	"Fri",
+	"Sat",
+	"Sun"
+};
+const char monthString[][4] = {
+	"Jan",
+	"Feb",
+	"Mar",
+	"Apr",
+	"May",
+	"Jun",
+	"Jul",
+	"Aug",
+	"Sep",
+	"Oct",
+	"Nov",
+	"Dec"
+};
+
 struct UserInterface_TypeDef{
 	void Init();
 	void Handler();
 private:
 	void DisplayTime(uint8_t x, uint8_t y);
+	void DisplayDay(uint8_t x, uint8_t y);
+	void DisplayDate(uint8_t x, uint8_t y);
+	void DisplayYear(uint8_t x, uint8_t y);
 };
 
 extern UserInterface_TypeDef UserInterface;

@@ -26,11 +26,13 @@ uint8_t dispBuffer[8 * 4];
 char strBuffer[20];
 
 Time timeNow;
+Dates dateNow;
 uint32_t dispTimer;
 uint32_t updateTimer;
 uint32_t transitionTimer;
 uint8_t menu;
 uint8_t dispMenu;
+uint8_t lSeconds;
 int8_t yPos = 0;
 
 void UserInterface_TypeDef::Init(){
@@ -41,6 +43,7 @@ void UserInterface_TypeDef::Init(){
 void UserInterface_TypeDef::Handler(){
 	if(System.Ticks() - updateTimer >= 100){
 		rtc.GetTime(&timeNow.Seconds, &timeNow.Minutes, &timeNow.Hours);
+		rtc.GetDate(&dateNow.Day, &dateNow.Date, &dateNow.Month, &dateNow.Year);
 		
 		disp.Write(5, MAX7219_REG_INTENSITY, Input.AmbientLight() * 0.08);
 		
@@ -81,7 +84,17 @@ void UserInterface_TypeDef::Handler(){
 		break;
 		case 3:
 			if(Input.Button1()){
-				//menu
+				menu ++;
+				transition = UP;
+			}
+			if(Input.Button2()){
+				menu --;
+				transition = DOWN;
+			}
+		break;
+		case 4:
+			if(Input.Button1()){
+				//menu ++;
 				//transition = UP;
 			}
 			if(Input.Button2()){
@@ -89,6 +102,13 @@ void UserInterface_TypeDef::Handler(){
 				transition = DOWN;
 			}
 		break;
+	}
+	if(timeNow.Seconds != lSeconds && ((timeNow.Seconds >= 30 && timeNow.Seconds < 40) || (timeNow.Seconds >= 0 && timeNow.Seconds < 10))){
+		lSeconds = timeNow.Seconds;
+		if(timeNow.Seconds % 10 == 0){menu = 1; transition = DOWN;}
+		if(timeNow.Seconds % 10 == 2){menu = 2; transition = DOWN;}
+		if(timeNow.Seconds % 10 == 4){menu = 3; transition = DOWN;}
+		if(timeNow.Seconds % 10 == 6){menu = 0; transition = UP;}
 	}
 	
 	if(transition != NONE){
@@ -143,20 +163,35 @@ void UserInterface_TypeDef::Handler(){
 				DisplayTime(0, yPos);
 			break;
 			case 1:
+				DisplayDay(0, yPos);
+			break;
+			case 2:
+				DisplayDate(0, yPos);
+			break;
+			case 3:
+				DisplayYear(0, yPos);
+			break;
+			case 4:
 				disp.Cursor(6, yPos);
 				sprintf(strBuffer, "Time");
 				disp.Print(strBuffer);
 				disp.DrawBuffer(0);
 			break;
-			case 2:
+			case 5:
 				disp.Cursor(6, yPos);
 				sprintf(strBuffer, "Date");
 				disp.Print(strBuffer);
 				disp.DrawBuffer(0);
 			break;
-			case 3:
+			case 6:
 				disp.Cursor(6, yPos);
 				sprintf(strBuffer, "Disp");
+				disp.Print(strBuffer);
+				disp.DrawBuffer(0);
+			break;
+			case 7:
+				disp.Cursor(8, yPos);
+				sprintf(strBuffer, "ALS");
 				disp.Print(strBuffer);
 				disp.DrawBuffer(0);
 			break;
@@ -172,9 +207,31 @@ void UserInterface_TypeDef::DisplayTime(uint8_t x, uint8_t y){
 	if(timeNow.Hours < 10){x += 4;}
 	if(timeNow.Minutes % 10 == 1){x += 1;}
 	if(timeNow.Minutes / 10 == 1){x += 1;}
-	disp.ClearBuffer();
 	disp.Cursor(x + 3, y + 0);
 	sprintf(strBuffer, "%d%c%02d ", timeNow.Hours, (timeNow.Seconds % 2 ? ':' : ' '), timeNow.Minutes);
+	disp.Print(strBuffer);
+	disp.DrawBuffer(0);
+}
+void UserInterface_TypeDef::DisplayDay(uint8_t x, uint8_t y){
+	disp.Cursor(x + 8, y + 0);
+	sprintf(strBuffer, "%s ", dayString[dateNow.Day - 1]);
+	disp.Print(strBuffer);
+	disp.DrawBuffer(0);
+}
+void UserInterface_TypeDef::DisplayDate(uint8_t x, uint8_t y){
+	if(dateNow.Date % 10 == 1){x += 1;}
+	if(dateNow.Date / 10 == 1){x += 1;}
+	if(dateNow.Date < 10){x += 4;}
+	disp.Cursor(x + 2, y + 0);
+	sprintf(strBuffer, "%d %s ", dateNow.Date, monthString[dateNow.Month - 1]);
+	disp.Print(strBuffer);
+	disp.DrawBuffer(0);
+}
+void UserInterface_TypeDef::DisplayYear(uint8_t x, uint8_t y){
+	if(dateNow.Year % 10 == 1){x += 1;}
+	if(dateNow.Year / 10 == 1){x += 1;}
+	disp.Cursor(x + 5, y + 0);
+	sprintf(strBuffer, "20%02d ", dateNow.Year);
 	disp.Print(strBuffer);
 	disp.DrawBuffer(0);
 }
